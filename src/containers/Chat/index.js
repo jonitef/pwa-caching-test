@@ -48,16 +48,24 @@ class Chat extends React.Component {
             'headers': headers
         }
 
-        navigator.serviceWorker.controller.postMessage(msg)
+        navigator.serviceWorker.ready.then((registration) => {
+            console.log('Service Worker Ready')
+            return registration.sync.register('sync-tag')
+        }).then(() => {
+            console.log('sync event registered')
+            console.log('submit')
+            fetch('https://back-opinnaytetyo.herokuapp.com/api/v1/stats', {
+                method: 'POST',
+                body: JSON.stringify(body),
+                headers: headers
+            })
+                .then(response => response.json())
+                .then(json => console.log(json))
+        }).catch(() => {
+            console.log('sync registration failed')
+        });
 
-        console.log('submit')
-        fetch('https://back-opinnaytetyo.herokuapp.com/api/v1/stats', {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: headers
-        })
-            .then(response => response.json())
-            .then(json => console.log(json))
+        navigator.serviceWorker.controller.postMessage(msg)
     };
 
     render() {

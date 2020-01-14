@@ -96,15 +96,6 @@ function registerValidSW(swUrl, config) {
     .catch(error => {
       console.error('Error during service worker registration:', error);
     });
-
-  navigator.serviceWorker.ready.then((registration) => {
-    console.log('Service Worker Ready')
-    return registration.sync.register('sync-tag')
-  }).then(() => {
-    console.log('sync event registered')
-  }).catch(() => {
-    console.log('sync registration failed')
-  });
 }
 
 function checkValidServiceWorker(swUrl, config) {
