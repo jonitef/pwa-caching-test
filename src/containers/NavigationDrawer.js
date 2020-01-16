@@ -66,7 +66,7 @@ function NavigationDrawer(props) {
         onClick={toggleDrawer}
       >
         <List>
-          {['Home', 'Profile', 'Chat'].map((text, index) => (
+          {['Koti', 'Profiili', 'Keskustelu'].map((text, index) => (
             <ListItem button key={text} onClick={() => {
                 setSelectedScreen(index)
             }}>

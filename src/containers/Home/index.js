@@ -40,7 +40,7 @@ class Home extends React.Component {
                         <MenuIcon style={{ color: 'white' }} />
                     </IconButton>
                     <Typography variant="h6" className={classes.title}>
-                        Home
+                        Koti
                     </Typography>
                 </Toolbar>
             </AppBar>
