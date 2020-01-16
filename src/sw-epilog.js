@@ -120,3 +120,19 @@ self.addEventListener('sync', (event) => {
         event.waitUntil(sendPostToServer())
     }
 });
+
+/*
+
+self.addEventListener('fetch', (event) => {
+    if (event.request.method === 'GET') {
+        event.respondWith(
+            caches.open('mysite-dynamic').then(async (cache) => {
+                const response = await fetch(event.request);
+                cache.put(event.request, response.clone());
+                return response;
+            })
+        );
+    }
+});
+
+*/

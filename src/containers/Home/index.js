@@ -167,3 +167,45 @@ class Home extends React.Component {
 }
 
 export default withStyles(styles)(Home);
+
+
+/*
+
+getRequests = async () => {
+        var networkDataReceived = false;
+
+        this.setState({ isLoading: true })
+        const url = 'https://jonitef-back.herokuapp.com/api/v1/stats'
+
+        // fetch fresh data
+        var networkUpdate = fetch(url).then((response) => {
+            return response.json();
+        }).then((data) => {
+            networkDataReceived = true;
+            console.log('got new data from network')
+            this.setState({ demoData: data, all: [], urgents: [] })
+            this.parseAllRequests(this.state.demoData)
+            this.parseUrgentRequests(this.state.demoData)
+        });
+
+        // fetch cached data
+        caches.match(url).then((response) => {
+            if (!response) throw Error("No data");
+            return response.json();
+        }).then((data) => {
+            // don't overwrite newer network data
+            if (!networkDataReceived) {
+                console.log('no new data form network')
+                this.setState({ demoData: data, all: [], urgents: [] })
+                this.parseAllRequests(this.state.demoData)
+                this.parseUrgentRequests(this.state.demoData)
+            }
+        }).catch(() => {
+            // we didn't get cached data, the network is our last hope:
+            return networkUpdate;
+        }).catch((e) => console.log(e)).then(() => {
+            this.setState({ isLoading: false });
+        });
+    }
+
+*/
