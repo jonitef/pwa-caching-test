@@ -24,6 +24,19 @@ class Chat extends React.Component {
     }
 
     componentDidMount() {
+
+        window.addEventListener('offline', () => {
+            console.log('in Offline!');
+        });
+
+        window.addEventListener('online', () => {
+            console.log('in Online!');
+            if (!navigator.serviceWorker && !window.SyncManager) {
+                console.log('service worker no bgsync')
+            }
+        });
+
+
     };
 
     toggleDrawer = () => {
@@ -54,6 +67,7 @@ class Chat extends React.Component {
         }).then(() => {
             console.log('sync event registered')
             console.log('submit')
+            navigator.serviceWorker.controller.postMessage(msg)
             fetch('https://back-opinnaytetyo.herokuapp.com/api/v1/stats', {
                 method: 'POST',
                 body: JSON.stringify(body),
@@ -61,11 +75,28 @@ class Chat extends React.Component {
             })
                 .then(response => response.json())
                 .then(json => console.log(json))
-        }).catch(() => {
+        }).catch((e) => {
             console.log('sync registration failed')
+            console.log(e)
+            this.ifSyncFailsToRegister(body, headers, msg)
         });
 
-        navigator.serviceWorker.controller.postMessage(msg)
+
+    };
+
+    ifSyncFailsToRegister = (body, headers, msg) => {
+        if (navigator.onLine) {
+            fetch('https://back-opinnaytetyo.herokuapp.com/api/v1/stats', {
+                method: 'POST',
+                body: JSON.stringify(body),
+                headers: headers
+            })
+                .then(response => response.json())
+                .then(json => console.log(json))
+        }
+        else {
+            console.log('You are offline, try again laiter')
+        }
     };
 
     render() {

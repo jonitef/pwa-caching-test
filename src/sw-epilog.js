@@ -102,7 +102,9 @@ self.addEventListener('message', (event) => {
 
 self.addEventListener('fetch', (event) => {
     if (event.request.method === 'GET') {
-        console.log('GET')
+        if(event.request.url === 'https://back-opinnaytetyo.herokuapp.com/api/v1/valmennus') {
+            console.log('valmennukset')
+        }
     }
     if (event.request.method === 'POST') {
         console.log(body)
