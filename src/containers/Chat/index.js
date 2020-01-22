@@ -205,7 +205,6 @@ class Chat extends React.Component {
 
     handleInput = (inputString) => {
         this.setState({ messageInput: inputString })
-        console.log(this.state.messageInput)
     };
 
     render() {
@@ -213,7 +212,7 @@ class Chat extends React.Component {
 
         return (
             <div className={classes.root}>
-                <AppBar position='static'>
+                <AppBar>
                     <Toolbar>
                         <IconButton edge="start" onClick={this.toggleDrawer}>
                             <MenuIcon style={{ color: 'white' }} />
@@ -223,19 +222,23 @@ class Chat extends React.Component {
                     </Typography>
                     </Toolbar>
                 </AppBar>
-                <List style={{ display: 'flex', flexDirection: 'column' }}>
+                <Toolbar />
+                <List style={{ display: 'flex', flexDirection: 'column', marginBottom: '32px' }}>
                     {
                         this.state.data.map((value) => (
                             this.createItem(classes, value)
                         ))
                     }
                 </List>
-                <div style={{ display: 'flex', marginTop: '16px', marginLeft: '16px', marginRight: '16px' }}>
-                <Input placeholder={'Kirjoita viesti...'} onChange={(e) => {
+                <div>
+                <Input style={{ backgroundColor: 'white', display: 'flex', marginLeft: '8px', position: 'fixed', bottom: '0px' }} fullWidth={true} placeholder={'Kirjoita viesti...'} onChange={(e) => {
                     this.handleInput(e.target.value);
-                }} />
-                <Button onClick={() => {this.submit()}}>Send</Button>
+                }} >
+
+                </Input>
+                <Button style={{position: 'fixed', bottom: '0px', right: '0px'}} onClick={() => { this.submit() }}>Send</Button>
                 </div>
+
             </div>
 
 

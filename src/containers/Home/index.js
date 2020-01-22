@@ -70,7 +70,7 @@ class Home extends React.Component {
 
     appBar = (classes) => {
         return (
-            <AppBar position='static'>
+            <AppBar>
                 <Toolbar>
                     <IconButton edge="start" onClick={this.toggleDrawer}>
                         <MenuIcon style={{ color: 'white' }} />
@@ -135,6 +135,7 @@ class Home extends React.Component {
         return (
             <div className={classes.root}>
                 {this.appBar(classes)}
+                <Toolbar/>
                 <List>
                     {
                         this.state.data.map((value) => (
