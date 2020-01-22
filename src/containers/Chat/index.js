@@ -16,6 +16,8 @@ const styles = () => ({
     },
 });
 
+let our_db = null;
+
 class Chat extends React.Component {
 
     constructor(props) {
@@ -37,16 +39,72 @@ class Chat extends React.Component {
             this.setState({online: true, btnTXT: 'online'})
             if (!navigator.serviceWorker && !window.SyncManager) {
                 console.log('service worker no bgsync')
+                this.sendPostToServer()
             }
         });
 
-
+        this.openDatabase()
     };
 
     toggleDrawer = () => {
         this.props.callbackFromParent()
     };
 
+    openDatabase = () => {
+        let indexedDBOpenRequest = indexedDB.open('test-idb', 1)
+        indexedDBOpenRequest.onerror = (error) => {
+            console.error('IndexedDB error:', error)
+        }
+        indexedDBOpenRequest.onupgradeneeded = (e) => {
+            e.target.result.createObjectStore('post_requests', {
+                autoIncrement: true, keyPath: 'mytestidbid'
+            })
+        }
+        indexedDBOpenRequest.onsuccess = (e) => {
+            our_db = e.target.result
+        }
+    }
+
+    getObjectStore = (storeName, mode) => {
+        return our_db.transaction(storeName, mode).objectStore(storeName)
+    }
+
+    sendPostToServer = () => {
+        console.log('send post to server')
+        let savedRequests = []
+        let req = this.getObjectStore('post_requests').openCursor()
+        req.onsuccess = async (event) => {
+            let cursor = event.target.result
+            if (cursor) {
+                savedRequests.push(cursor.value)
+                cursor.continue()
+            } else {
+                for (let savedRequest of savedRequests) {
+                    console.log('saved request', savedRequest)
+                    let requestUrl = savedRequest.url
+                    let payload = JSON.stringify(savedRequest.payload.body)
+                    let method = savedRequest.method
+                    let headers = savedRequest.payload.headers
+    
+                    fetch(requestUrl, {
+                        headers: headers,
+                        method: method,
+                        body: payload
+                    }).then((response) => {
+                        console.log('server response', response.body)
+                        if (response.status < 400) {
+                            this.getObjectStore('post_requests',
+                                'readwrite').delete(savedRequest.mytestidbid)
+                        }
+                    }).catch((error) => {
+                        console.error('Send to Server failed:', error)
+                        throw error
+                    })
+                }
+            }
+        }
+    }
+    
     submit = async (id) => {
 
         let body = {
