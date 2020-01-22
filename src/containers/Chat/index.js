@@ -20,17 +20,21 @@ class Chat extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            online: true,
+            btnTXT: 'online'}
     }
 
     componentDidMount() {
 
         window.addEventListener('offline', () => {
             console.log('in Offline!');
+            this.setState({online: false, btnTXT: 'offline'})
         });
 
         window.addEventListener('online', () => {
             console.log('in Online!');
+            this.setState({online: true, btnTXT: 'online'})
             if (!navigator.serviceWorker && !window.SyncManager) {
                 console.log('service worker no bgsync')
             }
@@ -61,13 +65,14 @@ class Chat extends React.Component {
             'headers': headers
         }
 
+        navigator.serviceWorker.controller.postMessage(msg)
+
         navigator.serviceWorker.ready.then((registration) => {
             console.log('Service Worker Ready')
             return registration.sync.register('sync-tag')
         }).then(() => {
             console.log('sync event registered')
             console.log('submit')
-            navigator.serviceWorker.controller.postMessage(msg)
             fetch('https://back-opinnaytetyo.herokuapp.com/api/v1/stats', {
                 method: 'POST',
                 body: JSON.stringify(body),
@@ -115,9 +120,9 @@ class Chat extends React.Component {
                     </Toolbar>
                 </AppBar>
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                    <Button onClick={() => { this.submit(1001) }}>1001</Button>
-                    <Button onClick={() => { this.submit(1002) }}>1002</Button>
-                    <Button onClick={() => { this.submit(1003) }}>1003</Button>
+                    <Button onClick={() => { this.submit(1001) }}>1001 {this.state.btnTXT}</Button>
+                    <Button onClick={() => { this.submit(1002) }}>1002 {this.state.btnTXT}</Button>
+                    <Button onClick={() => { this.submit(1003) }}>1003 {this.state.btnTXT}</Button>
                 </div>
             </div>
 
