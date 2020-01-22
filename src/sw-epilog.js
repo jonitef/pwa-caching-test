@@ -88,6 +88,7 @@ self.addEventListener('install', event => {
 
 self.addEventListener('activate', event => {
     console.log('in activate')
+    sendPostToServer()
     event.waitUntil(self.clients.claim());
 });
 
