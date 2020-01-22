@@ -10,6 +10,7 @@ openDatabase = () => {
     }
     indexedDBOpenRequest.onsuccess = (e) => {
         our_db = e.target.result
+        sendPostToServer()
     }
 }
 
@@ -88,7 +89,6 @@ self.addEventListener('install', event => {
 
 self.addEventListener('activate', event => {
     console.log('in activate')
-    sendPostToServer()
     event.waitUntil(self.clients.claim());
 });
 
