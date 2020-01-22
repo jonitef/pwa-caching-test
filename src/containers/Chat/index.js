@@ -6,6 +6,13 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import MenuIcon from '@material-ui/icons/Menu';
 import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Paper from '@material-ui/core/Paper';
+import List from '@material-ui/core/List';
+import Input from '@material-ui/core/Input';
 
 const styles = () => ({
     root: {
@@ -13,6 +20,11 @@ const styles = () => ({
     },
     title: {
         flexGrow: 1,
+    },
+    paper: {
+        flexGrow: 1,
+        marginTop: '16px',
+        backgroundColor: ''
     },
 });
 
@@ -24,13 +36,16 @@ class Chat extends React.Component {
         super(props);
         this.state = {
             online: true,
-            btnTXT: 'online'}
+            btnTXT: 'online',
+            data: [],
+            messageInput: ''
+        }
     }
 
     componentDidMount() {
 
-        if(!navigator.onLine) {
-            this.setState({online: false, btnTXT: 'offline'})
+        if (!navigator.onLine) {
+            this.setState({ online: false, btnTXT: 'offline' })
             console.log('offline')
         }
         else {
@@ -39,12 +54,12 @@ class Chat extends React.Component {
 
         window.addEventListener('offline', () => {
             console.log('in Offline!');
-            this.setState({online: false, btnTXT: 'offline'})
+            this.setState({ online: false, btnTXT: 'offline' })
         });
 
         window.addEventListener('online', () => {
             console.log('in Online!');
-            this.setState({online: true, btnTXT: 'online'})
+            this.setState({ online: true, btnTXT: 'online' })
             if (navigator.serviceWorker && !window.SyncManager) {
                 console.log('service worker no bgsync')
                 this.sendPostToServer()
@@ -52,6 +67,7 @@ class Chat extends React.Component {
         });
 
         this.openDatabase()
+        this.getStuff()
     };
 
     toggleDrawer = () => {
@@ -93,7 +109,7 @@ class Chat extends React.Component {
                     let payload = JSON.stringify(savedRequest.payload.body)
                     let method = savedRequest.method
                     let headers = savedRequest.payload.headers
-    
+
                     fetch(requestUrl, {
                         headers: headers,
                         method: method,
@@ -112,14 +128,12 @@ class Chat extends React.Component {
             }
         }
     }
-    
-    submit = async (id) => {
+
+    submit = async () => {
 
         let body = {
-            id: id,
-            wins: 20,
-            losses: 31,
-            points_scored: 10
+            from: 'user',
+            message: this.state.messageInput
         }
 
         let headers = {
@@ -139,7 +153,7 @@ class Chat extends React.Component {
         }).then(() => {
             console.log('sync event registered')
             console.log('submit')
-            fetch('https://back-opinnaytetyo.herokuapp.com/api/v1/stats', {
+            fetch('https://back-opinnaytetyo.herokuapp.com/api/v1/chat', {
                 method: 'POST',
                 body: JSON.stringify(body),
                 headers: headers
@@ -155,20 +169,50 @@ class Chat extends React.Component {
     };
 
     ifSyncFailsToRegister = (body, headers, msg) => {
-        fetch('https://back-opinnaytetyo.herokuapp.com/api/v1/stats', {
-                method: 'POST',
-                body: JSON.stringify(body),
-                headers: headers
+        fetch('https://back-opinnaytetyo.herokuapp.com/api/v1/chat', {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: headers
+        })
+            .then(response => response.json())
+            .then(json => console.log(json))
+    };
+
+    getStuff = () => {
+        console.log('getStuff')
+
+        fetch('https://back-opinnaytetyo.herokuapp.com/api/v1/chat', {
+            method: 'GET',
+        })
+            .then(response => response.json())
+            .then(json => {
+                console.log(json)
+                this.setState({ data: json })
             })
-                .then(response => response.json())
-                .then(json => console.log(json))
+    };
+
+    createItem = (classes, value) => {
+        return (
+
+            <Paper style={{ marginTop: '16px', alignSelf: value.from === 'ai' ? 'flex-start' : 'flex-end', marginLeft: '16px', marginRight: '16px' }}>
+                <ListItem>
+                    <ListItemText primary={value.message} />
+                </ListItem>
+            </Paper>
+
+        );
+    };
+
+    handleInput = (inputString) => {
+        this.setState({ messageInput: inputString })
+        console.log(this.state.messageInput)
     };
 
     render() {
         const { classes } = this.props;
 
         return (
-            <div>
+            <div className={classes.root}>
                 <AppBar position='static'>
                     <Toolbar>
                         <IconButton edge="start" onClick={this.toggleDrawer}>
@@ -179,10 +223,18 @@ class Chat extends React.Component {
                     </Typography>
                     </Toolbar>
                 </AppBar>
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                    <Button onClick={() => { this.submit(1001) }}>1001 {this.state.btnTXT}</Button>
-                    <Button onClick={() => { this.submit(1002) }}>1002 {this.state.btnTXT}</Button>
-                    <Button onClick={() => { this.submit(1003) }}>1003 {this.state.btnTXT}</Button>
+                <List style={{ display: 'flex', flexDirection: 'column' }}>
+                    {
+                        this.state.data.map((value) => (
+                            this.createItem(classes, value)
+                        ))
+                    }
+                </List>
+                <div style={{ display: 'flex', marginTop: '16px', marginLeft: '16px', marginRight: '16px' }}>
+                <Input placeholder={'Kirjoita viesti...'} onChange={(e) => {
+                    this.handleInput(e.target.value);
+                }} />
+                <Button onClick={() => {this.submit()}}>Send</Button>
                 </div>
             </div>
 

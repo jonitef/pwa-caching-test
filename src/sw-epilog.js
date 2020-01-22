@@ -119,6 +119,22 @@ self.addEventListener('fetch', (event) => {
                 })
             );
         }
+        else if (event.request.url === 'https://back-opinnaytetyo.herokuapp.com/api/v1/chat') {
+            event.respondWith(
+                fetch(event.request).then((response) => {
+                    console.log('request done')
+                    caches.open('mysite-dynamic').then(async (cache) => {
+                        console.log('cache open')
+                        cache.put(event.request, response)
+                        console.log('cache open and ready?')
+                    });
+                    console.log('return thing')
+                    return response.clone();
+                }).catch(() => {
+                    return caches.match(event.request);
+                })
+            );
+        }
     }
     if (event.request.method === 'POST') {
         console.log(body)

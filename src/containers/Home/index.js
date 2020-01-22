@@ -6,11 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import MenuIcon from '@material-ui/icons/Menu';
 import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Paper from '@material-ui/core/Paper';
+
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -84,21 +80,6 @@ class Home extends React.Component {
                 </Typography>
                 </Toolbar>
             </AppBar>
-        );
-    };
-
-    createItem = (classes, value) => {
-        return (
-            <div key={value.id}>
-                <Paper className={classes.paper}>
-                    <ListItem button onClick={() => { this.redirect(value) }}>
-                        <ListItemText primary={value.title} secondary={value.type} />
-                        <ListItemSecondaryAction>
-                            <ListItemText primary={<Typography style={{ opacity: 1 }}>MOI</Typography>} secondary={<Typography style={{ opacity: 1 }}>MOIMOI</Typography>} />
-                        </ListItemSecondaryAction>
-                    </ListItem>
-                </Paper>
-            </div>
         );
     };
 
