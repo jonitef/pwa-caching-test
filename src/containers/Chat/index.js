@@ -29,6 +29,14 @@ class Chat extends React.Component {
 
     componentDidMount() {
 
+        if(!navigator.onLine) {
+            this.setState({online: false, btnTXT: 'offline'})
+            console.log('offline')
+        }
+        else {
+            console.log('online')
+        }
+
         window.addEventListener('offline', () => {
             console.log('in Offline!');
             this.setState({online: false, btnTXT: 'offline'})
@@ -37,7 +45,7 @@ class Chat extends React.Component {
         window.addEventListener('online', () => {
             console.log('in Online!');
             this.setState({online: true, btnTXT: 'online'})
-            if (!navigator.serviceWorker && !window.SyncManager) {
+            if (navigator.serviceWorker && !window.SyncManager) {
                 console.log('service worker no bgsync')
                 this.sendPostToServer()
             }
@@ -144,22 +152,16 @@ class Chat extends React.Component {
             this.ifSyncFailsToRegister(body, headers, msg)
         });
 
-
     };
 
     ifSyncFailsToRegister = (body, headers, msg) => {
-        if (navigator.onLine) {
-            fetch('https://back-opinnaytetyo.herokuapp.com/api/v1/stats', {
+        fetch('https://back-opinnaytetyo.herokuapp.com/api/v1/stats', {
                 method: 'POST',
                 body: JSON.stringify(body),
                 headers: headers
             })
                 .then(response => response.json())
                 .then(json => console.log(json))
-        }
-        else {
-            console.log('You are offline, try again laiter')
-        }
     };
 
     render() {
