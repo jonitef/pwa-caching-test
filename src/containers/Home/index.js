@@ -72,7 +72,7 @@ class Home extends React.Component {
         return (
             <AppBar>
                 <Toolbar>
-                    <IconButton edge="start" onClick={this.toggleDrawer}>
+                    <IconButton aria-label='btn-label' edge="start" onClick={this.toggleDrawer}>
                         <MenuIcon style={{ color: 'white' }} />
                     </IconButton>
                     <Typography variant="h6" className={classes.title}>
@@ -85,7 +85,7 @@ class Home extends React.Component {
 
     card = (classes, value) => {
         return (
-            <div key={value.id}>
+            <li key={value.id}>
                 <Card className={classes.paper}>
                     <CardActionArea>
                         <CardMedia
@@ -103,7 +103,7 @@ class Home extends React.Component {
                         </CardContent>
                     </CardActionArea>
                 </Card>
-            </div>
+            </li>
         );
     };
 

@@ -36,7 +36,7 @@ class Profile extends React.Component {
 
             <AppBar position='static'>
                 <Toolbar>
-                    <IconButton edge="start" onClick={this.toggleDrawer}>
+                    <IconButton aria-label='btn-label' edge="start" onClick={this.toggleDrawer}>
                         <MenuIcon style={{ color: 'white' }} />
                     </IconButton>
                     <Typography variant="h6" className={classes.title}>

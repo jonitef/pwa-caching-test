@@ -214,7 +214,7 @@ class Chat extends React.Component {
             <div className={classes.root}>
                 <AppBar>
                     <Toolbar>
-                        <IconButton edge="start" onClick={this.toggleDrawer}>
+                        <IconButton aria-label='btn-label' edge="start" onClick={this.toggleDrawer}>
                             <MenuIcon style={{ color: 'white' }} />
                         </IconButton>
                         <Typography variant="h6" className={classes.title}>
@@ -236,7 +236,7 @@ class Chat extends React.Component {
                 }} >
 
                 </Input>
-                <Button style={{position: 'fixed', bottom: '0px', right: '0px'}} onClick={() => { this.submit() }}>Send</Button>
+                <Button aria-label='btn-label' style={{ position: 'fixed', bottom: '0px', right: '0px'}} onClick={() => { this.submit() }}>Send</Button>
                 </div>
 
             </div>
