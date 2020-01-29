@@ -71,7 +71,7 @@ class Profile extends React.Component {
             <div className={classes.root}>
                 <AppBar position='static'>
                     <Toolbar>
-                        <IconButton edge="start" onClick={this.toggleDrawer}>
+                        <IconButton aria-label='btn-label' edge="start" onClick={this.toggleDrawer}>
                             <MenuIcon style={{ color: 'white' }} />
                         </IconButton>
                         <Typography variant="h6" className={classes.title}>
@@ -80,10 +80,9 @@ class Profile extends React.Component {
                     </Toolbar>
                 </AppBar>
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                <Typography>{this.state.user.name}</Typography>
-                <Button onClick={() => this.updateProfile()}>Update</Button>
+                    <Typography>{this.state.user.name}</Typography>
+                    <Button onClick={() => this.updateProfile()}>Update</Button>
                 </div>
-
             </div>
         );
     }
