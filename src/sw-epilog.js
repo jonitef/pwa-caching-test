@@ -105,17 +105,10 @@ self.addEventListener('fetch', (event) => {
     if (event.request.method === 'GET') {
         if (event.request.url === 'https://back-opinnaytetyo.herokuapp.com/api/v1/valmennus') {
             event.respondWith(
-                fetch(event.request).then((response) => {
-                    console.log('request done')
-                    caches.open('mysite-dynamic').then(async (cache) => {
-                        console.log('cache open')
-                        cache.put(event.request, response)
-                        console.log('cache open and ready?')
-                    });
-                    console.log('return thing')
-                    return response.clone();
-                }).catch(() => {
-                    return caches.match(event.request);
+                caches.open('mysite-dynamic').then(async (cache) => {
+                    const response = await fetch(event.request);
+                    cache.put(event.request, response.clone());
+                    return response;
                 })
             );
         }
@@ -135,12 +128,34 @@ self.addEventListener('fetch', (event) => {
                 })
             );
         }
+        else if (event.request.url === 'https://back-opinnaytetyo.herokuapp.com/api/v1/profile/1') {
+            event.respondWith(
+                caches.match(event.request).then((response) => {
+                    return response || fetch(event.request).then((res) => {
+                        caches.open('mysite-dynamic').then(async (cache) => {
+                            cache.put(event.request, res)
+                        });
+                        return res.clone();
+                    });
+                })
+            );
+        }
     }
     if (event.request.method === 'POST') {
         console.log(body)
         console.log(headers)
         event.respondWith(
             getPostResponse(event.request.clone())
+        )
+    }
+    if (event.request.method === 'PUT') {
+        event.respondWith(
+            fetch(event.request).then((res) => {
+                caches.open('mysite-dynamic').then(async (cache) => {
+                    cache.put(event.request.url, res)
+                });
+                return res.clone()
+            })
         )
     }
 });

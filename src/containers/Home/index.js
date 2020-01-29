@@ -61,7 +61,7 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
-        this.getStuff()
+        this.getValmennukset()
     };
 
     toggleDrawer = () => {
@@ -128,6 +128,37 @@ class Home extends React.Component {
             this.setState({data: json})
           })
     };
+
+    getValmennukset = async () => {
+        var networkDataReceived = false;
+
+        const url = 'https://back-opinnaytetyo.herokuapp.com/api/v1/valmennus'
+
+        // fetch fresh data
+        var networkUpdate = fetch(url).then((response) => {
+            return response.json();
+        }).then((data) => {
+            networkDataReceived = true;
+            console.log('got new data from network')
+            this.setState({data: data})
+        });
+
+        // fetch cached data
+        caches.match(url).then((response) => {
+            if (!response) throw Error("No data");
+            return response.json();
+        }).then((data) => {
+            // don't overwrite newer network data
+            if (!networkDataReceived) {
+                console.log('no new data form network')
+                this.setState({data: data})
+            }
+        }).catch(() => {
+            // we didn't get cached data, the network is our last hope:
+            return networkUpdate;
+        }).catch((e) => console.log(e)).then(() => {
+        });
+    }
 
     render() {
         const { classes } = this.props;
