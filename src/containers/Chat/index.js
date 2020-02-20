@@ -163,12 +163,12 @@ class Chat extends React.Component {
         }).catch((e) => {
             console.log('sync registration failed')
             console.log(e)
-            this.ifSyncFailsToRegister(body, headers, msg)
+            this.ifSyncFailsToRegister(body, headers)
         });
 
     };
 
-    ifSyncFailsToRegister = (body, headers, msg) => {
+    ifSyncFailsToRegister = (body, headers) => {
         fetch('https://back-opinnaytetyo.herokuapp.com/api/v1/chat', {
             method: 'POST',
             body: JSON.stringify(body),
@@ -194,7 +194,7 @@ class Chat extends React.Component {
     createItem = (classes, value) => {
         return (
 
-            <Paper style={{ marginTop: '16px', alignSelf: value.from === 'ai' ? 'flex-start' : 'flex-end', marginLeft: '16px', marginRight: '16px' }}>
+            <Paper style={{ marginTop: '16px', alignSelf: value.from === 'ai' ? 'flex-start' : 'flex-end', marginLeft: '16px', marginRight: '16px', maxWidth: '70%' }}>
                 <ListItem>
                     <ListItemText primary={value.message} />
                 </ListItem>
