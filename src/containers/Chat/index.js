@@ -145,6 +145,13 @@ class Chat extends React.Component {
             'headers': headers
         }
 
+        caches.open('mysite-dynamic').then(async (cache) => {
+            const cacheThis = [...this.state.data, body]
+            console.log(cacheThis)
+            cache.put('https://back-opinnaytetyo.herokuapp.com/api/v1/chat', new Response(JSON.stringify(cacheThis)))
+            this.setState({data: [...this.state.data, body]})
+        });
+
         navigator.serviceWorker.controller.postMessage(msg)
 
         navigator.serviceWorker.ready.then((registration) => {
@@ -159,16 +166,17 @@ class Chat extends React.Component {
                 headers: headers
             })
                 .then(response => response.json())
-                .then(json => console.log(json))
+                .then(json => {
+                    console.log(json)
+                })
         }).catch((e) => {
             console.log('sync registration failed')
             console.log(e)
-            this.ifSyncFailsToRegister(body, headers)
+            this.ifSyncFailsToRegister(body, headers, msg)
         });
-
     };
 
-    ifSyncFailsToRegister = (body, headers) => {
+    ifSyncFailsToRegister = (body, headers, msg) => {
         fetch('https://back-opinnaytetyo.herokuapp.com/api/v1/chat', {
             method: 'POST',
             body: JSON.stringify(body),
