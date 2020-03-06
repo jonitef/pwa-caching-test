@@ -244,7 +244,7 @@ class Chat extends React.Component {
                 }} >
 
                 </Input>
-                <Button aria-label='btn-label' style={{ position: 'fixed', bottom: '0px', right: '0px'}} onClick={() => { this.submit() }}>Send</Button>
+                <Button aria-label='btn-label' style={{ position: 'fixed', bottom: '0px', right: '0px'}} onClick={() => { this.submit() }}>Lähetä</Button>
                 </div>
 
             </div>
