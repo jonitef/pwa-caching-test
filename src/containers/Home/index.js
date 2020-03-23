@@ -141,6 +141,13 @@ class Home extends React.Component {
             networkDataReceived = true;
             console.log('got new data from network')
             this.setState({data: data})
+            caches.has('mysite-dynamic').then((x) => {
+                if(!x) {
+                    caches.open('mysite-dynamic').then(async (cache) => {
+                        cache.put(url, new Response(JSON.stringify(data)))
+                    });                
+                }
+            });
         });
 
         // fetch cached data
